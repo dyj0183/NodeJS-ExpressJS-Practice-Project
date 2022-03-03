@@ -1,15 +1,20 @@
-const express = require('express');
+const express = require("express");
+const path = require("path");
+const bodyParser = require("body-parser");
 
 const app = express();
 
-app.use((req, res, next) => {
-    console.log('In the middleware!');
-    next(); // Allows the request to continue to the next middleware in line
-});
+const adminRoutes = require("./routes/admin");
+const shopRoutes = require("./routes/shop");
+
+app.use(bodyParser.urlencoded({ extended: false }));
+
+// We can still use all the routes as a middleware here
+app.use(adminRoutes);
+app.use(shopRoutes);
 
 app.use((req, res, next) => {
-    console.log('In another middleware!');
-    res.send('<h1>Hello from Express!</h1>');
+	res.sendFile(path.join(__dirname, "views", "404.html"));
 });
 
 // listen to request on localhost 3000
